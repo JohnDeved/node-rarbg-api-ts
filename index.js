@@ -37,7 +37,7 @@ class Common {
     request(url, options = requestOptions) {
         return new Promise((resolve, reject) => {
             const complete = () => {
-                request.get(url, requestOptions, (err, response) => {
+                request.get(url, options, (err, response) => {
                     if (err)
                         return reject(err);
                     resolve(response.body);
@@ -67,14 +67,18 @@ class Common {
             resolve(response.token);
         }));
     }
-    queryApi(...args) {
+    queryApi(...params) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 const url = new url_1.URL(apiEndpoint);
                 url.searchParams.append('app_id', appName);
                 url.searchParams.append('token', yield this.token);
-                args.forEach(param => {
-                    url.searchParams.append(param.prop, param.val);
+                params.forEach(param => {
+                    Object.getOwnPropertyNames(param).forEach(key => {
+                        if (param[key]) {
+                            url.searchParams.append(key, param[key]);
+                        }
+                    });
                 });
                 console.log(url.href);
                 resolve(yield this.request(url.href));
@@ -85,6 +89,9 @@ class Common {
 class Rargb {
     constructor() {
         this.common = new Common();
+    }
+    list(limit) {
+        this.common.queryApi({ limit });
     }
 }
 exports.Rargb = Rargb;

@@ -1,18 +1,17 @@
-import * as request from 'request';
 interface Iparam {
-    prop: string;
-    val: string;
+    [key: string]: string;
 }
 declare class Common {
     private _token;
     private _ratelimit;
-    readonly ratelimit: boolean;
-    request<T>(url: string, options?: request.CoreOptions): Promise<T>;
-    readonly token: Promise<string>;
-    queryApi(...args: Iparam[]): Promise<{}>;
+    private readonly ratelimit;
+    private request;
+    private readonly token;
+    queryApi(...params: Iparam[]): Promise<{}>;
 }
 export declare class Rargb {
-    common: Common;
+    protected common: Common;
+    list(limit?: string): void;
 }
 export declare const rargb: Rargb;
 export {};

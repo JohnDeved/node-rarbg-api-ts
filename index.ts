@@ -6,8 +6,7 @@ interface Itoken {
 }
 
 interface Iparam {
-  prop: string
-  val: string
+  [key: string]: string
 }
 
 const appName = 'node-rargb-api-ts'
@@ -24,7 +23,7 @@ class Common {
   private _token = ''
   private _ratelimit: number
 
-  public get ratelimit () {
+  private get ratelimit () {
     if (!this._ratelimit) {
       this._ratelimit = Date.now() + ratelimit
       return false
@@ -39,11 +38,11 @@ class Common {
     return limit
   }
 
-  public request<T> (url: string, options: request.CoreOptions = requestOptions): Promise<T> {
+  private request<T> (url: string, options: request.CoreOptions = requestOptions): Promise<T> {
     return new Promise((resolve, reject) => {
 
       const complete = () => {
-        request.get(url, requestOptions, (err, response) => {
+        request.get(url, options, (err, response) => {
           if (err) return reject(err)
           resolve(response.body)
         })
@@ -60,7 +59,7 @@ class Common {
     })
   }
 
-  public get token (): Promise<string> {
+  private get token (): Promise<string> {
     return new Promise(async (resolve, reject) => {
       if (this._token !== '') {
         return resolve(this._token)
@@ -77,14 +76,18 @@ class Common {
     })
   }
 
-  public async queryApi (...args: Iparam[]) {
+  public async queryApi (...params: Iparam[]) {
     return new Promise(async (resolve, reject) => {
       const url = new URL(apiEndpoint)
 
       url.searchParams.append('app_id', appName)
       url.searchParams.append('token', await this.token)
-      args.forEach(param => {
-        url.searchParams.append(param.prop, param.val)
+      params.forEach(param => {
+        Object.getOwnPropertyNames(param).forEach(key => {
+          if (param[key]) {
+            url.searchParams.append(key, param[key])
+          }
+        })
       })
 
       console.log(url.href)
@@ -95,7 +98,11 @@ class Common {
 }
 
 export class Rargb {
-  public common = new Common()
+  protected common = new Common()
+
+  public list (limit?: string) {
+    this.common.queryApi({ limit })
+  }
 }
 
 export const rargb = new Rargb()
