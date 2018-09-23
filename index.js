@@ -10,18 +10,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request");
 const url_1 = require("url");
-const appName = 'node-rargb-api-ts';
-const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
-const ratelimit = 2000;
 const requestOptions = {
     json: true,
     headers: {
-        'User-Agent': 'UA'
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
     }
 };
+const appName = 'node-rargb-api-ts';
+const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
+const ratelimit = 2000;
+const tokenExpire = ((1000 * 60) * 15);
 class Common {
-    constructor() {
-        this._token = '';
+    get tokenExpired() {
+        if (!this._tokenExpire) {
+            this._tokenExpire = Date.now() + tokenExpire;
+            return false;
+        }
+        const expired = Date.now() > this._tokenExpire;
+        return expired;
     }
     get ratelimit() {
         if (!this._ratelimit) {
@@ -34,12 +40,15 @@ class Common {
         }
         return limit;
     }
-    request(url, options = requestOptions) {
+    request(url, options = requestOptions, getToken) {
         return new Promise((resolve, reject) => {
             const complete = () => {
+                console.log(url);
                 request.get(url, options, (err, response) => {
                     if (err)
                         return reject(err);
+                    if (response.statusCode !== 200)
+                        return reject(response.statusMessage);
                     resolve(response.body);
                 });
             };
@@ -55,21 +64,27 @@ class Common {
         });
     }
     get token() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            if (this._token !== '') {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            if (this._token) {
                 return resolve(this._token);
             }
             const url = new url_1.URL(apiEndpoint);
             url.searchParams.append('get_token', 'get_token');
             url.searchParams.append('app_id', appName);
-            console.log(url.href);
-            const response = yield this.request(url.href);
-            resolve(response.token);
+            let result = yield this.request(url.href, null, true)
+                .catch((err) => console.error('Error fetching token:', err));
+            if (result) {
+                if (result.token) {
+                    this._tokenExpire = Date.now() + tokenExpire;
+                    this._token = result.token;
+                }
+            }
+            resolve(this._token || '50w8as762e');
         }));
     }
     queryApi(...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 const url = new url_1.URL(apiEndpoint);
                 url.searchParams.append('app_id', appName);
                 url.searchParams.append('token', yield this.token);
@@ -80,8 +95,7 @@ class Common {
                         }
                     });
                 });
-                console.log(url.href);
-                resolve(yield this.request(url.href));
+                resolve(this.request(url.href));
             }));
         });
     }
@@ -91,7 +105,10 @@ class Rargb {
         this.common = new Common();
     }
     list(limit) {
-        this.common.queryApi({ limit });
+        return this.common.queryApi({ mode: 'list', limit });
+    }
+    search(searchString) {
+        return this.common.queryApi({ mode: 'search', search_string: searchString });
     }
 }
 exports.Rargb = Rargb;
