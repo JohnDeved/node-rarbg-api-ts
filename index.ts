@@ -19,6 +19,13 @@ interface Iparam {
   [key: string]: string
 }
 
+interface Idefaults {
+  limit: string,
+  sort: string,
+  format: string,
+  ranked: string
+}
+
 const requestOptions = {
   json: true,
   headers: {
@@ -30,6 +37,39 @@ const appName = 'node-rargb-api-ts'
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php'
 const ratelimit = 2000
 const tokenExpire = ((1000 * 60) * 15)
+
+class Enums {
+  public static LIMIT = {
+    SMALL: '25',
+    MEDIUM: '50',
+    BIG: '100'
+  }
+
+  public static SORT = {
+    SEEDERS: 'seeders',
+    LEECHERS: 'leechers',
+    LAST: 'last'
+  }
+
+  public static CATEGORY = {
+    ALL: '',
+    TV: 'tv',
+    MOVIES: 'movies',
+    XXX: '2;4',
+    GAMES: '2;27;28;29;30;31;32;40;53',
+    MUSIC: '2;23;24;25;26'
+  }
+
+  public static FORMAT = {
+    SHORT: 'json',
+    EXTENDED: 'json_extended'
+  }
+
+  public static RANKED = {
+    OTHER: '0',
+    ONLY: '1'
+  }
+}
 
 class Common {
   private _token: string
@@ -125,17 +165,51 @@ class Common {
       resolve(this.request(url.href))
     })
   }
+
+  public applyParams (defaults: Idefaults, params: Iparam[]) {
+    let appliedParams = defaults
+
+    params.forEach(param => {
+      Object.getOwnPropertyNames(param).forEach(key => {
+        if (param[key] && defaults[key]) {
+          appliedParams[key] = param[key]
+        }
+      })
+    })
+
+    return appliedParams
+  }
 }
 
 export class Rargb {
   protected common = new Common()
+  public static enums = Enums
 
-  public list (limit?: string): Promise<ItorrentResults> {
-    return this.common.queryApi({ mode: 'list', limit })
+  public default: Idefaults = {
+    limit: Enums.LIMIT.SMALL,
+    sort: Enums.SORT.LAST,
+    format: Enums.FORMAT.SHORT,
+    ranked: Enums.RANKED.ONLY
   }
 
-  public search (searchString: string): Promise<ItorrentResults> {
-    return this.common.queryApi({ mode: 'search', search_string: searchString })
+  public list (...params: Iparam[]): Promise<ItorrentResults> {
+    return this.common.queryApi({ mode: 'list',
+      ...this.common.applyParams(this.default, params) })
+  }
+
+  public search (searchString: string, ...params: Iparam[]): Promise<ItorrentResults> {
+    return this.common.queryApi({ mode: 'search', search_string: searchString,
+      ...this.common.applyParams(this.default, params) })
+  }
+
+  public searchImdb (imdbId: string, ...params: Iparam[]) {
+    return this.common.queryApi({ mode: 'search', search_imdb: imdbId,
+      ...this.common.applyParams(this.default, params) })
+  }
+
+  public searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]) {
+    return this.common.queryApi({ mode: 'search', search_imdb: tvdbId,
+      ...this.common.applyParams(this.default, params) })
   }
 }
 

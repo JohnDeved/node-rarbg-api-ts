@@ -20,6 +20,34 @@ const appName = 'node-rargb-api-ts';
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
 const ratelimit = 2000;
 const tokenExpire = ((1000 * 60) * 15);
+class Enums {
+}
+Enums.LIMIT = {
+    SMALL: '25',
+    MEDIUM: '50',
+    BIG: '100'
+};
+Enums.SORT = {
+    SEEDERS: 'seeders',
+    LEECHERS: 'leechers',
+    LAST: 'last'
+};
+Enums.CATEGORY = {
+    ALL: '',
+    TV: 'tv',
+    MOVIES: 'movies',
+    XXX: '2;4',
+    GAMES: '2;27;28;29;30;31;32;40;53',
+    MUSIC: '2;23;24;25;26'
+};
+Enums.FORMAT = {
+    SHORT: 'json',
+    EXTENDED: 'json_extended'
+};
+Enums.RANKED = {
+    OTHER: '0',
+    ONLY: '1'
+};
 class Common {
     get tokenExpired() {
         if (!this._tokenExpire) {
@@ -99,17 +127,41 @@ class Common {
             }));
         });
     }
+    applyParams(defaults, params) {
+        let appliedParams = defaults;
+        params.forEach(param => {
+            Object.getOwnPropertyNames(param).forEach(key => {
+                if (param[key] && defaults[key]) {
+                    appliedParams[key] = param[key];
+                }
+            });
+        });
+        return appliedParams;
+    }
 }
 class Rargb {
     constructor() {
         this.common = new Common();
+        this.default = {
+            limit: Enums.LIMIT.SMALL,
+            sort: Enums.SORT.LAST,
+            format: Enums.FORMAT.SHORT,
+            ranked: Enums.RANKED.ONLY
+        };
     }
-    list(limit) {
-        return this.common.queryApi({ mode: 'list', limit });
+    list(...params) {
+        return this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
     }
-    search(searchString) {
-        return this.common.queryApi({ mode: 'search', search_string: searchString });
+    search(searchString, ...params) {
+        return this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
+    }
+    searchImdb(imdbId, ...params) {
+        return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
+    }
+    searchTvdb(tvdbId, limit, ...params) {
+        return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: tvdbId }, this.common.applyParams(this.default, params)));
     }
 }
+Rargb.enums = Enums;
 exports.Rargb = Rargb;
 exports.rargb = new Rargb();
