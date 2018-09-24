@@ -11,10 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request");
 const url_1 = require("url");
 const requestOptions = {
-    json: true,
-    headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-    }
+    json: true
 };
 const appName = 'node-rargb-api-ts';
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
@@ -68,7 +65,7 @@ class Common {
         }
         return limit;
     }
-    request(url, options = requestOptions, getToken) {
+    request(url, options = requestOptions) {
         return new Promise((resolve, reject) => {
             const complete = () => {
                 console.log(url);
@@ -99,7 +96,7 @@ class Common {
             const url = new url_1.URL(apiEndpoint);
             url.searchParams.append('get_token', 'get_token');
             url.searchParams.append('app_id', appName);
-            let result = yield this.request(url.href, null, true)
+            let result = yield this.request(url.href)
                 .catch((err) => console.error('Error fetching token:', err));
             if (result) {
                 if (result.token) {
@@ -107,15 +104,18 @@ class Common {
                     this._token = result.token;
                 }
             }
-            resolve(this._token || '50w8as762e');
+            resolve(this._token);
         }));
     }
     queryApi(...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 const url = new url_1.URL(apiEndpoint);
+                const token = yield this.token;
+                if (!token)
+                    return reject('Error: token undefined!');
                 url.searchParams.append('app_id', appName);
-                url.searchParams.append('token', yield this.token);
+                url.searchParams.append('token', token);
                 params.forEach(param => {
                     Object.getOwnPropertyNames(param).forEach(key => {
                         if (param[key]) {

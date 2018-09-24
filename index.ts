@@ -27,10 +27,7 @@ interface Idefaults {
 }
 
 const requestOptions = {
-  json: true,
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-  }
+  json: true
 }
 
 const appName = 'node-rargb-api-ts'
@@ -101,7 +98,7 @@ class Common {
     return limit
   }
 
-  private request<T> (url: string, options: request.CoreOptions = requestOptions, getToken?: boolean): Promise<T> {
+  private request<T> (url: string, options: request.CoreOptions = requestOptions): Promise<T> {
     return new Promise((resolve, reject) => {
 
       const complete = () => {
@@ -134,7 +131,7 @@ class Common {
       url.searchParams.append('get_token', 'get_token')
       url.searchParams.append('app_id', appName)
 
-      let result = await this.request<Itoken>(url.href, null, true)
+      let result = await this.request<Itoken>(url.href)
         .catch((err) => console.error('Error fetching token:', err))
 
       if (result) {
@@ -144,16 +141,19 @@ class Common {
         }
       }
 
-      resolve(this._token || '50w8as762e')
+      resolve(this._token)
     })
   }
 
   public async queryApi (...params: Iparam[]): Promise<any> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       const url = new URL(apiEndpoint)
+      const token = await this.token
+
+      if (!token) return reject('Error: token undefined!')
 
       url.searchParams.append('app_id', appName)
-      url.searchParams.append('token', await this.token)
+      url.searchParams.append('token', token)
       params.forEach(param => {
         Object.getOwnPropertyNames(param).forEach(key => {
           if (param[key]) {
