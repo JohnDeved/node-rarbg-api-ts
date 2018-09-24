@@ -112,8 +112,6 @@ class Common {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 const url = new url_1.URL(apiEndpoint);
                 const token = yield this.token;
-                if (!token)
-                    return reject('Error: token undefined!');
                 url.searchParams.append('app_id', appName);
                 url.searchParams.append('token', token);
                 params.forEach(param => {
@@ -123,7 +121,11 @@ class Common {
                         }
                     });
                 });
-                resolve(this.request(url.href));
+                if (!token)
+                    return reject('Error: token undefined! ' + url.href);
+                this.request(url.href)
+                    .then(resolve)
+                    .catch(reject);
             }));
         });
     }
@@ -146,7 +148,10 @@ class Rargb {
             limit: Enums.LIMIT.SMALL,
             sort: Enums.SORT.LAST,
             format: Enums.FORMAT.SHORT,
-            ranked: Enums.RANKED.ONLY
+            ranked: Enums.RANKED.ONLY,
+            category: Enums.CATEGORY.ALL,
+            min_seeders: '0',
+            min_leechers: '0'
         };
     }
     list(...params) {
@@ -159,7 +164,7 @@ class Rargb {
         return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
     }
     searchTvdb(tvdbId, limit, ...params) {
-        return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: tvdbId }, this.common.applyParams(this.default, params)));
+        return this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
     }
 }
 Rargb.enums = Enums;

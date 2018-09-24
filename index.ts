@@ -1,10 +1,32 @@
 import * as request from 'request'
 import { URL } from 'url'
 
+interface IepisodeInfo {
+  imdb: string
+  tvrage: null
+  tvdb: string
+  themoviedb: string
+  airdate: string
+  epnum: string
+  seasonnum: string
+  title: string
+}
+
 interface Itorrent {
   filename: string
   category: string
   download: string
+}
+
+interface ItorrentExtended extends Itorrent {
+  title: string
+  seeders: number
+  leechers: number
+  size: number
+  pubdate: string
+  episode_info: IepisodeInfo
+  rankded: number
+  info_page: string
 }
 
 interface ItorrentResults {
@@ -20,10 +42,13 @@ interface Iparam {
 }
 
 interface Idefaults {
-  limit: string,
-  sort: string,
-  format: string,
+  limit: string
+  sort: string
+  format: string
   ranked: string
+  category: string
+  min_seeders: string
+  min_leechers: string
 }
 
 const requestOptions = {
@@ -150,8 +175,6 @@ class Common {
       const url = new URL(apiEndpoint)
       const token = await this.token
 
-      if (!token) return reject('Error: token undefined!')
-
       url.searchParams.append('app_id', appName)
       url.searchParams.append('token', token)
       params.forEach(param => {
@@ -162,7 +185,11 @@ class Common {
         })
       })
 
-      resolve(this.request(url.href))
+      if (!token) return reject('Error: token undefined! ' + url.href)
+
+      this.request(url.href)
+        .then(resolve)
+        .catch(reject)
     })
   }
 
@@ -189,7 +216,10 @@ export class Rargb {
     limit: Enums.LIMIT.SMALL,
     sort: Enums.SORT.LAST,
     format: Enums.FORMAT.SHORT,
-    ranked: Enums.RANKED.ONLY
+    ranked: Enums.RANKED.ONLY,
+    category: Enums.CATEGORY.ALL,
+    min_seeders: '0',
+    min_leechers: '0'
   }
 
   public list (...params: Iparam[]): Promise<ItorrentResults> {
@@ -208,7 +238,7 @@ export class Rargb {
   }
 
   public searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]) {
-    return this.common.queryApi({ mode: 'search', search_imdb: tvdbId,
+    return this.common.queryApi({ mode: 'search', search_tvdb: tvdbId,
       ...this.common.applyParams(this.default, params) })
   }
 }

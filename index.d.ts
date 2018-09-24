@@ -14,6 +14,9 @@ interface Idefaults {
     sort: string;
     format: string;
     ranked: string;
+    category: string;
+    min_seeders: string;
+    min_leechers: string;
 }
 declare class Enums {
     static LIMIT: {
