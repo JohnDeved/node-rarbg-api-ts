@@ -1,10 +1,32 @@
-interface Itorrent {
+interface IepisodeInfo {
+    imdb: string;
+    tvrage: null;
+    tvdb: string;
+    themoviedb: string;
+    airdate: string;
+    epnum: string;
+    seasonnum: string;
+    title: string;
+}
+export interface Itorrent {
+    error?: string;
+    error_code?: number;
     filename: string;
     category: string;
     download: string;
 }
+export interface ItorrentExtended extends Itorrent {
+    title: string;
+    seeders: number;
+    leechers: number;
+    size: number;
+    pubdate: string;
+    episode_info: IepisodeInfo;
+    rankded: number;
+    info_page: string;
+}
 interface ItorrentResults {
-    torrent_results: Itorrent[];
+    torrent_results: Itorrent[] | ItorrentExtended[];
 }
 interface Iparam {
     [key: string]: string;
@@ -59,7 +81,7 @@ declare class Common {
 }
 export declare class Rargb {
     protected common: Common;
-    static enums: typeof Enums;
+    enums: typeof Enums;
     default: Idefaults;
     list(...params: Iparam[]): Promise<ItorrentResults>;
     search(searchString: string, ...params: Iparam[]): Promise<ItorrentResults>;

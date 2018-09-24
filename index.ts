@@ -1,5 +1,5 @@
-import * as request from 'request'
 import { URL } from 'url'
+import axios, { AxiosResponse } from 'axios'
 
 interface IepisodeInfo {
   imdb: string
@@ -12,13 +12,15 @@ interface IepisodeInfo {
   title: string
 }
 
-interface Itorrent {
+export interface Itorrent {
+  error?: string
+  error_code?: number
   filename: string
   category: string
   download: string
 }
 
-interface ItorrentExtended extends Itorrent {
+export interface ItorrentExtended extends Itorrent {
   title: string
   seeders: number
   leechers: number
@@ -30,7 +32,7 @@ interface ItorrentExtended extends Itorrent {
 }
 
 interface ItorrentResults {
-  torrent_results: Itorrent[]
+  torrent_results: Itorrent[] | ItorrentExtended[]
 }
 
 interface Itoken {
@@ -49,10 +51,6 @@ interface Idefaults {
   category: string
   min_seeders: string
   min_leechers: string
-}
-
-const requestOptions = {
-  json: true
 }
 
 const appName = 'node-rargb-api-ts'
@@ -123,16 +121,14 @@ class Common {
     return limit
   }
 
-  private request<T> (url: string, options: request.CoreOptions = requestOptions): Promise<T> {
+  private request<T> (url: string): Promise<T> {
     return new Promise((resolve, reject) => {
 
       const complete = () => {
-        console.log(url)
-        request.get(url, options, (err, response) => {
-          if (err) return reject(err)
-          if (response.statusCode !== 200) return reject(response.statusMessage)
-          resolve(response.body)
-        })
+        // console.log(url)
+        axios.get(url)
+          .then(response => resolve(response.data))
+          .catch(reject)
       }
 
       const stall = () => {
@@ -210,7 +206,7 @@ class Common {
 
 export class Rargb {
   protected common = new Common()
-  public static enums = Enums
+  public enums = Enums
 
   public default: Idefaults = {
     limit: Enums.LIMIT.SMALL,
@@ -223,8 +219,8 @@ export class Rargb {
   }
 
   public list (...params: Iparam[]): Promise<ItorrentResults> {
-    return this.common.queryApi({ mode: 'list',
-      ...this.common.applyParams(this.default, params) })
+    return (this.common.queryApi({ mode: 'list',
+      ...this.common.applyParams(this.default, params) }))
   }
 
   public search (searchString: string, ...params: Iparam[]): Promise<ItorrentResults> {

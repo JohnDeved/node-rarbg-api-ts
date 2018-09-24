@@ -8,11 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const request = require("request");
 const url_1 = require("url");
-const requestOptions = {
-    json: true
-};
+const axios_1 = require("axios");
 const appName = 'node-rargb-api-ts';
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
 const ratelimit = 2000;
@@ -65,17 +62,13 @@ class Common {
         }
         return limit;
     }
-    request(url, options = requestOptions) {
+    request(url) {
         return new Promise((resolve, reject) => {
             const complete = () => {
-                console.log(url);
-                request.get(url, options, (err, response) => {
-                    if (err)
-                        return reject(err);
-                    if (response.statusCode !== 200)
-                        return reject(response.statusMessage);
-                    resolve(response.body);
-                });
+                // console.log(url)
+                axios_1.default.get(url)
+                    .then(response => resolve(response.data))
+                    .catch(reject);
             };
             const stall = () => {
                 if (this.ratelimit) {
@@ -144,6 +137,7 @@ class Common {
 class Rargb {
     constructor() {
         this.common = new Common();
+        this.enums = Enums;
         this.default = {
             limit: Enums.LIMIT.SMALL,
             sort: Enums.SORT.LAST,
@@ -155,7 +149,7 @@ class Rargb {
         };
     }
     list(...params) {
-        return this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
+        return (this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params))));
     }
     search(searchString, ...params) {
         return this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
@@ -167,6 +161,5 @@ class Rargb {
         return this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
     }
 }
-Rargb.enums = Enums;
 exports.Rargb = Rargb;
 exports.rargb = new Rargb();
