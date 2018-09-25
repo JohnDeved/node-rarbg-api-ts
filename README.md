@@ -76,6 +76,50 @@ rargb.searchTvdb('277165').then(result => {
 # Parameters
 Extend your search querys.
 
+#### possible parameters are:
+
+- `category`
+  
+  will restrict results to a certain category
+
+  Default is ALL
+
+- `format`
+
+  this defines what kind of results you get back
+
+  Default is SHORT
+
+- `limit`
+
+  this will limit or extend the ammount of results
+
+  Default is MEDIUM
+
+- `min_leechers`
+
+  this will restrict results to torrents that have a certain ammount of leechers
+
+  Default is "0"
+
+- `min_seeders`
+
+  this will restrict results to torrents that have a certain ammount of seeders
+
+  Default is "0"
+
+- `ranked`
+
+  this will decide if you only want to display scene torrents or not
+
+  Default is ONLY
+
+- `sort`
+
+  sort parameter will sort the results by seeders,leechers,last. 
+  
+  Default is LAST
+
 ## Parameter Enums
 For simplicity I created enums for every parameter value.
 
@@ -89,14 +133,14 @@ rargb.enums
 
 ## Default Parameters
 You can set default parameters that apply to every request.
-![](https://i.imgur.com/ONTUlTa.png)
 
 ```js
   rargb.default.category = rargb.enums.CATEGORY.TV
 ```
+![](https://i.imgur.com/ONTUlTa.png)
 
 ## Request Parameters
-You can also set parameters for each Api request you do, by simply adding a json object with your wanted parameters to any Api function call like so:
+You can also set parameters for each Api request you do, by simply adding a json object with your wanted parameters to any Api function call like so (this will overwrite parameters set with `rargb.default`):
 
 ```js
 rargb.list({ category: rargb.enums.CATEGORY.TV }
