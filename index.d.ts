@@ -25,9 +25,6 @@ export interface ItorrentExtended extends Itorrent {
     rankded: number;
     info_page: string;
 }
-interface ItorrentResults {
-    torrent_results: Itorrent[] | ItorrentExtended[];
-}
 interface Iparam {
     [key: string]: string;
 }
@@ -83,10 +80,10 @@ export declare class Rargb {
     protected common: Common;
     enums: typeof Enums;
     default: Idefaults;
-    list(...params: Iparam[]): Promise<ItorrentResults>;
-    search(searchString: string, ...params: Iparam[]): Promise<ItorrentResults>;
-    searchImdb(imdbId: string, ...params: Iparam[]): Promise<any>;
-    searchTvdb(tvdbId: string, limit?: string, ...params: Iparam[]): Promise<any>;
+    list(...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
+    search(searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
+    searchImdb(imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
+    searchTvdb(tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
 }
 export declare const rargb: Rargb;
 export {};

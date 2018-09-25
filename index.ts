@@ -218,24 +218,36 @@ export class Rargb {
     min_leechers: '0'
   }
 
-  public list (...params: Iparam[]): Promise<ItorrentResults> {
-    return (this.common.queryApi({ mode: 'list',
-      ...this.common.applyParams(this.default, params) }))
+  public async list (...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
+    const response: ItorrentResults = await this.common.queryApi({ mode: 'list',
+      ...this.common.applyParams(this.default, params) })
+
+    if (response.torrent_results) return response.torrent_results
+    console.error('rargb unexpected result: ' + JSON.stringify(response))
   }
 
-  public search (searchString: string, ...params: Iparam[]): Promise<ItorrentResults> {
-    return this.common.queryApi({ mode: 'search', search_string: searchString,
+  public async search (searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
+    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_string: searchString,
       ...this.common.applyParams(this.default, params) })
+
+    if (response.torrent_results) return response.torrent_results
+    console.error('rargb unexpected result: ' + JSON.stringify(response))
   }
 
-  public searchImdb (imdbId: string, ...params: Iparam[]) {
-    return this.common.queryApi({ mode: 'search', search_imdb: imdbId,
+  public async searchImdb (imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
+    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_imdb: imdbId,
       ...this.common.applyParams(this.default, params) })
+
+    if (response.torrent_results) return response.torrent_results
+    console.error('rargb unexpected result: ' + JSON.stringify(response))
   }
 
-  public searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]) {
-    return this.common.queryApi({ mode: 'search', search_tvdb: tvdbId,
+  public async searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
+    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_tvdb: tvdbId,
       ...this.common.applyParams(this.default, params) })
+
+    if (response.torrent_results) return response.torrent_results
+    console.error('rargb unexpected result: ' + JSON.stringify(response))
   }
 }
 

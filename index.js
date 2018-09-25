@@ -149,16 +149,36 @@ class Rargb {
         };
     }
     list(...params) {
-        return (this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params))));
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
+            if (response.torrent_results)
+                return response.torrent_results;
+            console.error('rargb unexpected result: ' + JSON.stringify(response));
+        });
     }
     search(searchString, ...params) {
-        return this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
+            if (response.torrent_results)
+                return response.torrent_results;
+            console.error('rargb unexpected result: ' + JSON.stringify(response));
+        });
     }
     searchImdb(imdbId, ...params) {
-        return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
+            if (response.torrent_results)
+                return response.torrent_results;
+            console.error('rargb unexpected result: ' + JSON.stringify(response));
+        });
     }
     searchTvdb(tvdbId, limit, ...params) {
-        return this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
+            if (response.torrent_results)
+                return response.torrent_results;
+            console.error('rargb unexpected result: ' + JSON.stringify(response));
+        });
     }
 }
 exports.Rargb = Rargb;
