@@ -1,6 +1,6 @@
 {
   "name": "rarbg-api-ts",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "rarbg api wraper written in typescript",
   "keywords": [
     "rarbg",
