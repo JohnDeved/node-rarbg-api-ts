@@ -115,7 +115,7 @@ class Common {
                     });
                 });
                 if (!token)
-                    return reject('Error: token undefined! ' + url.href);
+                    return reject('Error: token undefined!');
                 this.request(url.href)
                     .then(resolve)
                     .catch(reject);
@@ -153,7 +153,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result: ' + JSON.stringify(response));
+            console.error('rargb unexpected result:', JSON.stringify(response));
         });
     }
     search(searchString, ...params) {
@@ -161,7 +161,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result: ' + JSON.stringify(response));
+            console.error('rargb unexpected result:', JSON.stringify(response));
         });
     }
     searchImdb(imdbId, ...params) {
@@ -169,7 +169,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result: ' + JSON.stringify(response));
+            console.error('rargb unexpected result:', JSON.stringify(response));
         });
     }
     searchTvdb(tvdbId, limit, ...params) {
@@ -177,7 +177,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result: ' + JSON.stringify(response));
+            console.error('rargb unexpected result:', JSON.stringify(response));
         });
     }
 }

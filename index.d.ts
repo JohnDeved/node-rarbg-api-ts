@@ -37,33 +37,38 @@ interface Idefaults {
     min_seeders: string;
     min_leechers: string;
 }
-declare class Enums {
-    static LIMIT: {
-        SMALL: string;
-        MEDIUM: string;
-        BIG: string;
-    };
-    static SORT: {
-        SEEDERS: string;
-        LEECHERS: string;
-        LAST: string;
-    };
-    static CATEGORY: {
-        ALL: string;
-        TV: string;
-        MOVIES: string;
-        XXX: string;
-        GAMES: string;
-        MUSIC: string;
-    };
-    static FORMAT: {
-        SHORT: string;
-        EXTENDED: string;
-    };
-    static RANKED: {
-        OTHER: string;
-        ONLY: string;
-    };
+interface ILimit {
+    SMALL: string;
+    MEDIUM: string;
+    BIG: string;
+}
+interface ISort {
+    SEEDERS: string;
+    LEECHERS: string;
+    LAST: string;
+}
+interface ICategory {
+    ALL: string;
+    TV: string;
+    MOVIES: string;
+    XXX: string;
+    GAMES: string;
+    MUSIC: string;
+}
+interface IFormat {
+    SHORT: string;
+    EXTENDED: string;
+}
+interface IRanked {
+    OTHER: string;
+    ONLY: string;
+}
+interface Ienums {
+    LIMIT: ILimit;
+    SORT: ISort;
+    CATEGORY: ICategory;
+    FORMAT: IFormat;
+    RANKED: IRanked;
 }
 declare class Common {
     private _token;
@@ -78,7 +83,7 @@ declare class Common {
 }
 export declare class Rargb {
     protected common: Common;
-    enums: typeof Enums;
+    enums: Ienums;
     default: Idefaults;
     list(...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
     search(searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
