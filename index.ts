@@ -243,7 +243,7 @@ class Common {
   }
 }
 
-export class rarbg {
+export class Rarbg {
   protected common = new Common()
   public enums: Ienums = Enums
 
@@ -290,4 +290,4 @@ export class rarbg {
   }
 }
 
-export const rarbg = new rarbg()
+export const rarbg = new Rarbg()
