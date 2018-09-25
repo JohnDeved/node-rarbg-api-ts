@@ -143,18 +143,18 @@ You can set default parameters that apply to every request.
 You can also set parameters for each Api request you do, by simply adding a json object with your wanted parameters to any Api function call like so (this will overwrite parameters set with `rarbg.default`):
 
 ```js
-rarbg.list({ category: rarbg.enums.CATEGORY.TV }
+rarbg.list({ category: rarbg.enums.CATEGORY.TV })
   .then(result => {
     // code
   })
 
-rarbg.search('silicon valley', { category: rarbg.enums.CATEGORY.TV }
+rarbg.search('silicon valley', { category: rarbg.enums.CATEGORY.TV })
   .then(result => {
     // code
   })
 
-rarbg.list({ format: rarbg.enums.FORMAT.EXTENTED }
-  .then(result => {
+rarbg.list({ format: rarbg.enums.FORMAT.EXTENDED })
+  .then((torrents: ItorrentExtended[]) => {
     // code
   })
 ```
