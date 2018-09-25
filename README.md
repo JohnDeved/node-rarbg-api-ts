@@ -13,15 +13,15 @@ const { rarbg } = require('rarbg-api-ts')
 import { rarbg } from 'rargn-api-ts'
 ```
 
-want to extend the api with your own functions? no problem, just import the "Tvmaze" class.
+want to extend the api with your own functions? no problem, just import the "Rargb" class.
 ```
 // node way
-const { rarbg, rarbg } = require('tvmaze-api-ts')
+const { rarbg, Rargb } = require('tvmaze-api-ts')
  
 // es6 way
-import { rarbg, rarbg } from 'tvmaze-api-ts'
+import { rarbg, Rargb } from 'tvmaze-api-ts'
  
-class Myrarbg extends rarbg {
+class Myrarbg extends Rargb {
   // code
 }
  
