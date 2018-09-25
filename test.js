@@ -25,11 +25,10 @@ describe('rargb API tests', function () {
             this.timeout(15000);
             const result = yield _1.rargb.list();
             expect(result).to.exist;
-            expect(result.torrent_results).to.exist;
-            expect(result.torrent_results[0]).to.exist;
-            expect(result.torrent_results[0].filename).to.exist;
-            expect(result.torrent_results[0].download).to.exist;
-            expect(result.torrent_results[0].category).to.exist;
+            expect(result[0]).to.exist;
+            expect(result[0].filename).to.exist;
+            expect(result[0].download).to.exist;
+            expect(result[0].category).to.exist;
         });
     });
     it('search', function () {
@@ -37,14 +36,11 @@ describe('rargb API tests', function () {
             this.timeout(15000);
             const result = yield _1.rargb.search('silicon valley');
             expect(result).to.exist;
-            expect(result.torrent_results).to.exist;
-            expect(result.torrent_results[0]).to.exist;
-            expect(result.torrent_results[0].filename).to.exist;
-            expect(result.torrent_results[0].download).to.exist;
-            expect(result.torrent_results[0].category).to.exist;
-            const extended = result.torrent_results;
-            expect(extended.category).not.to.exist;
-            expect(extended.seeders).not.to.exist;
+            expect(result[0]).to.exist;
+            expect(result[0].filename).to.exist;
+            expect(result[0].download).to.exist;
+            expect(result[0].category).to.exist;
+            expect(result[0].seeders).not.to.exist;
         });
     });
     it('search extended', function () {
@@ -52,13 +48,11 @@ describe('rargb API tests', function () {
             this.timeout(15000);
             const result = yield _1.rargb.search('silicon valley', { format: _1.rargb.enums.FORMAT.EXTENDED });
             expect(result).to.exist;
-            expect(result.torrent_results).to.exist;
-            expect(result.torrent_results[0]).to.exist;
-            expect(result.torrent_results[0].download).to.exist;
-            expect(result.torrent_results[0].filename).not.to.exist;
-            const extended = result.torrent_results[0];
-            expect(extended.category).to.exist;
-            expect(extended.seeders).to.exist;
+            expect(result[0]).to.exist;
+            expect(result[0].download).to.exist;
+            expect(result[0].filename).not.to.exist;
+            expect(result[0].category).to.exist;
+            expect(result[0].seeders).to.exist;
         });
     });
 });

@@ -17,39 +17,33 @@ describe('rargb API tests', function () {
     this.timeout(15000)
     const result = await rargb.list()
     expect(result).to.exist
-    expect(result.torrent_results).to.exist
-    expect(result.torrent_results[0]).to.exist
-    expect(result.torrent_results[0].filename).to.exist
-    expect(result.torrent_results[0].download).to.exist
-    expect(result.torrent_results[0].category).to.exist
+    expect(result[0]).to.exist
+    expect(result[0].filename).to.exist
+    expect(result[0].download).to.exist
+    expect(result[0].category).to.exist
   })
 
   it('search', async function () {
     this.timeout(15000)
     const result: any = await rargb.search('silicon valley')
     expect(result).to.exist
-    expect(result.torrent_results).to.exist
-    expect(result.torrent_results[0]).to.exist
-    expect(result.torrent_results[0].filename).to.exist
-    expect(result.torrent_results[0].download).to.exist
-    expect(result.torrent_results[0].category).to.exist
+    expect(result[0]).to.exist
+    expect(result[0].filename).to.exist
+    expect(result[0].download).to.exist
+    expect(result[0].category).to.exist
 
-    const extended: ItorrentExtended = result.torrent_results as any
-    expect(extended.category).not.to.exist
-    expect(extended.seeders).not.to.exist
+    expect(result[0].seeders).not.to.exist
   })
 
   it('search extended', async function () {
     this.timeout(15000)
-    const result = await rargb.search('silicon valley', { format: rargb.enums.FORMAT.EXTENDED })
+    const result: any = await rargb.search('silicon valley', { format: rargb.enums.FORMAT.EXTENDED })
     expect(result).to.exist
-    expect(result.torrent_results).to.exist
-    expect(result.torrent_results[0]).to.exist
-    expect(result.torrent_results[0].download).to.exist
-    expect(result.torrent_results[0].filename).not.to.exist
+    expect(result[0]).to.exist
+    expect(result[0].download).to.exist
+    expect(result[0].filename).not.to.exist
+    expect(result[0].category).to.exist
 
-    const extended: ItorrentExtended = result.torrent_results[0] as any
-    expect(extended.category).to.exist
-    expect(extended.seeders).to.exist
+    expect(result[0].seeders).to.exist
   })
 })
