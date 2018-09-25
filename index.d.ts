@@ -81,7 +81,7 @@ declare class Common {
     queryApi(...params: Iparam[]): Promise<any>;
     applyParams(defaults: Idefaults, params: Iparam[]): Idefaults;
 }
-export declare class Rargb {
+export declare class rarbg {
     protected common: Common;
     enums: Ienums;
     default: Idefaults;
@@ -90,5 +90,5 @@ export declare class Rargb {
     searchImdb(imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
     searchTvdb(tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
 }
-export declare const rargb: Rargb;
+export declare const rarbg: any;
 export {};

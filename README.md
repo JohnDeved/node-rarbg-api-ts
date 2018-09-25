@@ -1,31 +1,31 @@
 # Installation
 download the module
 ```
-npm i rargb-api-ts
+npm i rarbg-api-ts
 ```
 
 include it in your project
 ```js
 // node way
-const { rargb } = require('rargb-api-ts')
+const { rarbg } = require('rarbg-api-ts')
 
 // es6 way
-import { rargb } from 'rargn-api-ts'
+import { rarbg } from 'rargn-api-ts'
 ```
 
 want to extend the api with your own functions? no problem, just import the "Tvmaze" class.
 ```
 // node way
-const { rargb, Rargb } = require('tvmaze-api-ts')
+const { rarbg, rarbg } = require('tvmaze-api-ts')
  
 // es6 way
-import { rargb, Rargb } from 'tvmaze-api-ts'
+import { rarbg, rarbg } from 'tvmaze-api-ts'
  
-class MyRargb extends Rargb {
+class Myrarbg extends rarbg {
   // code
 }
  
-const myRargb = new MyRargb()
+const myrarbg = new Myrarbg()
 ```
 
 # made with ♥️ and typescript
@@ -38,7 +38,7 @@ Get a list of torrents.
 
 ```js
 // (...params: Iparam[]): Promise
-rargb.list().then(result => {
+rarbg.list().then(result => {
   // code
 })
 ```
@@ -48,7 +48,7 @@ Search for a torrent.
 
 ```js
 // (searchString: string, ...params: Iparam[]): Promise
-rargb.search('silicon valley').then(result => {
+rarbg.search('silicon valley').then(result => {
   // code
 })
 ```
@@ -58,7 +58,7 @@ Search for a torrent using a Imdb Id
 
 ```js
 // (imdbId: string, ...params: Iparam[]): Promise
-rargb.searchImdb('tt2575988').then(result => {
+rarbg.searchImdb('tt2575988').then(result => {
   // code
 })
 ```
@@ -68,7 +68,7 @@ Search for a torrent using a Tvdb Id.
 
 ```js
 // (imdbId: string, ...params: Iparam[]): Promise
-rargb.searchTvdb('277165').then(result => {
+rarbg.searchTvdb('277165').then(result => {
   // code
 })
 ```
@@ -124,7 +124,7 @@ Extend your search querys.
 For simplicity I created enums for every parameter value.
 
 ```js
-rargb.enums
+rarbg.enums
 ```
 
 ![](https://i.imgur.com/PRoH17r.png)
@@ -135,25 +135,25 @@ rargb.enums
 You can set default parameters that apply to every request.
 
 ```js
-  rargb.default.category = rargb.enums.CATEGORY.TV
+  rarbg.default.category = rarbg.enums.CATEGORY.TV
 ```
 ![](https://i.imgur.com/ONTUlTa.png)
 
 ## Request Parameters
-You can also set parameters for each Api request you do, by simply adding a json object with your wanted parameters to any Api function call like so (this will overwrite parameters set with `rargb.default`):
+You can also set parameters for each Api request you do, by simply adding a json object with your wanted parameters to any Api function call like so (this will overwrite parameters set with `rarbg.default`):
 
 ```js
-rargb.list({ category: rargb.enums.CATEGORY.TV }
+rarbg.list({ category: rarbg.enums.CATEGORY.TV }
   .then(result => {
     // code
   })
 
-rargb.search('silicon valley', { category: rargb.enums.CATEGORY.TV }
+rarbg.search('silicon valley', { category: rarbg.enums.CATEGORY.TV }
   .then(result => {
     // code
   })
 
-rargb.list({ format: rargb.enums.FORMAT.EXTENTED }
+rarbg.list({ format: rarbg.enums.FORMAT.EXTENTED }
   .then(result => {
     // code
   })

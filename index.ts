@@ -92,7 +92,7 @@ interface Ienums {
   RANKED: IRanked
 }
 
-const appName = 'node-rargb-api-ts'
+const appName = 'node-rarbg-api-ts'
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php'
 const ratelimit = 2000
 const tokenExpire = ((1000 * 60) * 15)
@@ -243,7 +243,7 @@ class Common {
   }
 }
 
-export class Rargb {
+export class rarbg {
   protected common = new Common()
   public enums: Ienums = Enums
 
@@ -262,7 +262,7 @@ export class Rargb {
       ...this.common.applyParams(this.default, params) })
 
     if (response.torrent_results) return response.torrent_results
-    console.error('rargb unexpected result:', JSON.stringify(response))
+    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
   public async search (searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
@@ -270,7 +270,7 @@ export class Rargb {
       ...this.common.applyParams(this.default, params) })
 
     if (response.torrent_results) return response.torrent_results
-    console.error('rargb unexpected result:', JSON.stringify(response))
+    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
   public async searchImdb (imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
@@ -278,7 +278,7 @@ export class Rargb {
       ...this.common.applyParams(this.default, params) })
 
     if (response.torrent_results) return response.torrent_results
-    console.error('rargb unexpected result:', JSON.stringify(response))
+    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
   public async searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
@@ -286,8 +286,8 @@ export class Rargb {
       ...this.common.applyParams(this.default, params) })
 
     if (response.torrent_results) return response.torrent_results
-    console.error('rargb unexpected result:', JSON.stringify(response))
+    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 }
 
-export const rargb = new Rargb()
+export const rarbg = new rarbg()

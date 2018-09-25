@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const axios_1 = require("axios");
-const appName = 'node-rargb-api-ts';
+const appName = 'node-rarbg-api-ts';
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
 const ratelimit = 2000;
 const tokenExpire = ((1000 * 60) * 15);
@@ -134,7 +134,7 @@ class Common {
         return appliedParams;
     }
 }
-class Rargb {
+class rarbg {
     constructor() {
         this.common = new Common();
         this.enums = Enums;
@@ -153,7 +153,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result:', JSON.stringify(response));
+            console.error('rarbg unexpected result:', JSON.stringify(response));
         });
     }
     search(searchString, ...params) {
@@ -161,7 +161,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result:', JSON.stringify(response));
+            console.error('rarbg unexpected result:', JSON.stringify(response));
         });
     }
     searchImdb(imdbId, ...params) {
@@ -169,7 +169,7 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result:', JSON.stringify(response));
+            console.error('rarbg unexpected result:', JSON.stringify(response));
         });
     }
     searchTvdb(tvdbId, limit, ...params) {
@@ -177,9 +177,9 @@ class Rargb {
             const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
             if (response.torrent_results)
                 return response.torrent_results;
-            console.error('rargb unexpected result:', JSON.stringify(response));
+            console.error('rarbg unexpected result:', JSON.stringify(response));
         });
     }
 }
-exports.Rargb = Rargb;
-exports.rargb = new Rargb();
+exports.rarbg = rarbg;
+exports.rarbg = new exports.rarbg();

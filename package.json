@@ -1,9 +1,9 @@
 {
   "name": "rarbg-api-ts",
   "version": "1.0.16",
-  "description": "rargb api wraper written in typescript",
+  "description": "rarbg api wraper written in typescript",
   "keywords": [
-    "rargb",
+    "rarbg",
     "torrentapi",
     "torrent",
     "wraper",
@@ -12,10 +12,10 @@
     "types",
     "api"
   ],
-  "homepage": "https://github.com/JohnDeved/node-rargb-api-ts",
+  "homepage": "https://github.com/JohnDeved/node-rarbg-api-ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JohnDeved/node-rargb-api-ts"
+    "url": "https://github.com/JohnDeved/node-rarbg-api-ts"
   },
   "main": "index.js",
   "scripts": {

@@ -1,21 +1,21 @@
 /* tslint:disable:no-unused-expression */
 
-import { rargb, Itorrent, ItorrentExtended } from '.'
+import { rarbg, Itorrent, ItorrentExtended } from '.'
 
 import * as chai from 'chai'
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 const { should, expect, request } = chai
 
-describe('rargb API tests', function () {
+describe('rarbg API tests', function () {
 
   it('connection', async function () {
-    const result = request('https://torrentapi.org').get('/pubapi_v2.php?get_token=get_token&app_id=node-rargb-api-ts')
+    const result = request('https://torrentapi.org').get('/pubapi_v2.php?get_token=get_token&app_id=node-rarbg-api-ts')
   })
 
   it('list', async function () {
     this.timeout(15000)
-    const result = await rargb.list()
+    const result = await rarbg.list()
     expect(result).to.exist
     expect(result[0]).to.exist
     expect(result[0].filename).to.exist
@@ -25,7 +25,7 @@ describe('rargb API tests', function () {
 
   it('search', async function () {
     this.timeout(15000)
-    const result: any = await rargb.search('silicon valley')
+    const result: any = await rarbg.search('silicon valley')
     expect(result).to.exist
     expect(result[0]).to.exist
     expect(result[0].filename).to.exist
@@ -37,7 +37,7 @@ describe('rargb API tests', function () {
 
   it('search extended', async function () {
     this.timeout(15000)
-    const result: any = await rargb.search('silicon valley', { format: rargb.enums.FORMAT.EXTENDED })
+    const result: any = await rarbg.search('silicon valley', { format: rarbg.enums.FORMAT.EXTENDED })
     expect(result).to.exist
     expect(result[0]).to.exist
     expect(result[0].download).to.exist
@@ -47,3 +47,5 @@ describe('rargb API tests', function () {
     expect(result[0].seeders).to.exist
   })
 })
+
+rarbg.default.category = rarbg.enums.CATEGORY.TV

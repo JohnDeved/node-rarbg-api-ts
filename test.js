@@ -14,16 +14,16 @@ const chai = require("chai");
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const { should, expect, request } = chai;
-describe('rargb API tests', function () {
+describe('rarbg API tests', function () {
     it('connection', function () {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = request('https://torrentapi.org').get('/pubapi_v2.php?get_token=get_token&app_id=node-rargb-api-ts');
+            const result = request('https://torrentapi.org').get('/pubapi_v2.php?get_token=get_token&app_id=node-rarbg-api-ts');
         });
     });
     it('list', function () {
         return __awaiter(this, void 0, void 0, function* () {
             this.timeout(15000);
-            const result = yield _1.rargb.list();
+            const result = yield _1.rarbg.list();
             expect(result).to.exist;
             expect(result[0]).to.exist;
             expect(result[0].filename).to.exist;
@@ -34,7 +34,7 @@ describe('rargb API tests', function () {
     it('search', function () {
         return __awaiter(this, void 0, void 0, function* () {
             this.timeout(15000);
-            const result = yield _1.rargb.search('silicon valley');
+            const result = yield _1.rarbg.search('silicon valley');
             expect(result).to.exist;
             expect(result[0]).to.exist;
             expect(result[0].filename).to.exist;
@@ -46,7 +46,7 @@ describe('rargb API tests', function () {
     it('search extended', function () {
         return __awaiter(this, void 0, void 0, function* () {
             this.timeout(15000);
-            const result = yield _1.rargb.search('silicon valley', { format: _1.rargb.enums.FORMAT.EXTENDED });
+            const result = yield _1.rarbg.search('silicon valley', { format: _1.rarbg.enums.FORMAT.EXTENDED });
             expect(result).to.exist;
             expect(result[0]).to.exist;
             expect(result[0].download).to.exist;
@@ -56,3 +56,4 @@ describe('rargb API tests', function () {
         });
     });
 });
+_1.rarbg.default.category = _1.rarbg.enums.CATEGORY.TV;
