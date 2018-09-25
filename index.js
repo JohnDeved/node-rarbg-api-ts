@@ -13,7 +13,6 @@ const axios_1 = require("axios");
 const appName = 'node-rarbg-api-ts';
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php';
 const ratelimit = 2000;
-const tokenExpire = ((1000 * 60) * 15);
 class Enums {
 }
 Enums.LIMIT = {
@@ -43,14 +42,6 @@ Enums.RANKED = {
     ONLY: '1'
 };
 class Common {
-    get tokenExpired() {
-        if (!this._tokenExpire) {
-            this._tokenExpire = Date.now() + tokenExpire;
-            return false;
-        }
-        const expired = Date.now() > this._tokenExpire;
-        return expired;
-    }
     get ratelimit() {
         if (!this._ratelimit) {
             this._ratelimit = Date.now() + ratelimit;
@@ -83,7 +74,7 @@ class Common {
     }
     get token() {
         return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-            if (this._token) {
+            if (this._token && !this._tokenExpired) {
                 return resolve(this._token);
             }
             const url = new url_1.URL(apiEndpoint);
@@ -93,7 +84,7 @@ class Common {
                 .catch((err) => console.error('Error fetching token:', err));
             if (result) {
                 if (result.token) {
-                    this._tokenExpire = Date.now() + tokenExpire;
+                    this._tokenExpired = false;
                     this._token = result.token;
                 }
             }
@@ -117,7 +108,18 @@ class Common {
                 if (!token)
                     return reject('Error: token undefined!');
                 this.request(url.href)
-                    .then(resolve)
+                    .then((result) => {
+                    if (result.torrent_results)
+                        return resolve(result.torrent_results);
+                    if (result.error_code === 4) {
+                        console.info(`token ${this._token} is expired... requesting new one`);
+                        this._tokenExpired = true;
+                        return resolve(this.queryApi(...params));
+                    }
+                    if (result.error_code)
+                        return reject(`Error ${result.error_code}: ${result.error}`);
+                    return reject(result);
+                })
                     .catch(reject);
             }));
         });
@@ -134,7 +136,7 @@ class Common {
         return appliedParams;
     }
 }
-class rarbg {
+class Rarbg {
     constructor() {
         this.common = new Common();
         this.enums = Enums;
@@ -150,36 +152,24 @@ class rarbg {
     }
     list(...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
-            if (response.torrent_results)
-                return response.torrent_results;
-            console.error('rarbg unexpected result:', JSON.stringify(response));
+            return this.common.queryApi(Object.assign({ mode: 'list' }, this.common.applyParams(this.default, params)));
         });
     }
     search(searchString, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
-            if (response.torrent_results)
-                return response.torrent_results;
-            console.error('rarbg unexpected result:', JSON.stringify(response));
+            return this.common.queryApi(Object.assign({ mode: 'search', search_string: searchString }, this.common.applyParams(this.default, params)));
         });
     }
     searchImdb(imdbId, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
-            if (response.torrent_results)
-                return response.torrent_results;
-            console.error('rarbg unexpected result:', JSON.stringify(response));
+            return this.common.queryApi(Object.assign({ mode: 'search', search_imdb: imdbId }, this.common.applyParams(this.default, params)));
         });
     }
-    searchTvdb(tvdbId, limit, ...params) {
+    searchTvdb(tvdbId, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
-            if (response.torrent_results)
-                return response.torrent_results;
-            console.error('rarbg unexpected result:', JSON.stringify(response));
+            return this.common.queryApi(Object.assign({ mode: 'search', search_tvdb: tvdbId }, this.common.applyParams(this.default, params)));
         });
     }
 }
-exports.rarbg = rarbg;
-exports.rarbg = new exports.rarbg();
+exports.Rarbg = Rarbg;
+exports.rarbg = new Rarbg();

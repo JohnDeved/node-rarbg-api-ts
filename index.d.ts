@@ -73,22 +73,21 @@ interface Ienums {
 declare class Common {
     private _token;
     private _ratelimit;
-    private _tokenExpire;
-    private readonly tokenExpired;
+    private _tokenExpired;
     private readonly ratelimit;
     private request;
     private readonly token;
     queryApi(...params: Iparam[]): Promise<any>;
     applyParams(defaults: Idefaults, params: Iparam[]): Idefaults;
 }
-export declare class rarbg {
+export declare class Rarbg {
     protected common: Common;
     enums: Ienums;
     default: Idefaults;
     list(...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
     search(searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
     searchImdb(imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
-    searchTvdb(tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
+    searchTvdb(tvdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]>;
 }
-export declare const rarbg: any;
+export declare const rarbg: Rarbg;
 export {};

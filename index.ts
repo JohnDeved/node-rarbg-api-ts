@@ -33,6 +33,8 @@ export interface ItorrentExtended extends Itorrent {
 
 interface ItorrentResults {
   torrent_results: Itorrent[] | ItorrentExtended[]
+  error: string
+  error_code: number
 }
 
 interface Itoken {
@@ -95,7 +97,6 @@ interface Ienums {
 const appName = 'node-rarbg-api-ts'
 const apiEndpoint = 'https://torrentapi.org/pubapi_v2.php'
 const ratelimit = 2000
-const tokenExpire = ((1000 * 60) * 15)
 
 class Enums {
   public static LIMIT = {
@@ -133,17 +134,7 @@ class Enums {
 class Common {
   private _token: string
   private _ratelimit: number
-  private _tokenExpire: number
-
-  private get tokenExpired () {
-    if (!this._tokenExpire) {
-      this._tokenExpire = Date.now() + tokenExpire
-      return false
-    }
-
-    const expired = Date.now() > this._tokenExpire
-    return expired
-  }
+  private _tokenExpired: boolean
 
   private get ratelimit () {
     if (!this._ratelimit) {
@@ -183,7 +174,7 @@ class Common {
 
   private get token (): Promise<string> {
     return new Promise(async resolve => {
-      if (this._token) {
+      if (this._token && !this._tokenExpired) {
         return resolve(this._token)
       }
 
@@ -196,7 +187,7 @@ class Common {
 
       if (result) {
         if (result.token) {
-          this._tokenExpire = Date.now() + tokenExpire
+          this._tokenExpired = false
           this._token = result.token
         }
       }
@@ -223,7 +214,16 @@ class Common {
       if (!token) return reject('Error: token undefined!')
 
       this.request(url.href)
-        .then(resolve)
+        .then((result: ItorrentResults) => {
+          if (result.torrent_results) return resolve(result.torrent_results)
+          if (result.error_code === 4) {
+            console.info(`token ${this._token} is expired... requesting new one`)
+            this._tokenExpired = true
+            return resolve(this.queryApi(...params))
+          }
+          if (result.error_code) return reject(`Error ${result.error_code}: ${result.error}`)
+          return reject(result)
+        })
         .catch(reject)
     })
   }
@@ -258,35 +258,23 @@ export class Rarbg {
   }
 
   public async list (...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
-    const response: ItorrentResults = await this.common.queryApi({ mode: 'list',
+    return this.common.queryApi({ mode: 'list',
       ...this.common.applyParams(this.default, params) })
-
-    if (response.torrent_results) return response.torrent_results
-    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
   public async search (searchString: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
-    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_string: searchString,
+    return this.common.queryApi({ mode: 'search', search_string: searchString,
       ...this.common.applyParams(this.default, params) })
-
-    if (response.torrent_results) return response.torrent_results
-    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
   public async searchImdb (imdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
-    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_imdb: imdbId,
+    return this.common.queryApi({ mode: 'search', search_imdb: imdbId,
       ...this.common.applyParams(this.default, params) })
-
-    if (response.torrent_results) return response.torrent_results
-    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 
-  public async searchTvdb (tvdbId: string, limit?: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
-    const response: ItorrentResults = await this.common.queryApi({ mode: 'search', search_tvdb: tvdbId,
+  public async searchTvdb (tvdbId: string, ...params: Iparam[]): Promise<Itorrent[] | ItorrentExtended[]> {
+    return this.common.queryApi({ mode: 'search', search_tvdb: tvdbId,
       ...this.common.applyParams(this.default, params) })
-
-    if (response.torrent_results) return response.torrent_results
-    console.error('rarbg unexpected result:', JSON.stringify(response))
   }
 }
 
