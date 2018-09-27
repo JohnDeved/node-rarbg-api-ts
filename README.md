@@ -14,7 +14,7 @@ import { rarbg } from 'rargn-api-ts'
 ```
 
 want to extend the api with your own functions? no problem, just import the "Rargb" class.
-```
+```js
 // node way
 const { rarbg, Rargb } = require('tvmaze-api-ts')
  
@@ -76,7 +76,7 @@ rarbg.searchTvdb('277165').then(result => {
 # Parameters
 Extend your search querys.
 
-#### possible parameters are:
+**possible parameters are:**
 
 - `category`
   
@@ -158,3 +158,9 @@ rarbg.list({ format: rarbg.enums.FORMAT.EXTENDED })
     // code
   })
 ```
+
+# Limits
+The rargb api is limited to 1 request per 2 seconds per ip.
+Dont worry tho, rarbg-api-ts will automaticly keep you within this limit.
+
+It will also automaticly request api tokens for you and replace them once they expire.

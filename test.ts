@@ -7,8 +7,9 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 const { should, expect, request } = chai
 
-describe('rarbg API tests', function () {
+rarbg.default.category = rarbg.enums.CATEGORY.TV
 
+describe('rarbg API tests', function () {
   it('connection', async function () {
     const result = request('https://torrentapi.org').get('/pubapi_v2.php?get_token=get_token&app_id=node-rarbg-api-ts')
   })
@@ -47,5 +48,3 @@ describe('rarbg API tests', function () {
     expect(result[0].seeders).to.exist
   })
 })
-
-rarbg.default.category = rarbg.enums.CATEGORY.TV

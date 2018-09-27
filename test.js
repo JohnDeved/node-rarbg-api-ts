@@ -14,6 +14,7 @@ const chai = require("chai");
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const { should, expect, request } = chai;
+_1.rarbg.default.category = _1.rarbg.enums.CATEGORY.TV;
 describe('rarbg API tests', function () {
     it('connection', function () {
         return __awaiter(this, void 0, void 0, function* () {
@@ -56,4 +57,3 @@ describe('rarbg API tests', function () {
         });
     });
 });
-_1.rarbg.default.category = _1.rarbg.enums.CATEGORY.TV;
